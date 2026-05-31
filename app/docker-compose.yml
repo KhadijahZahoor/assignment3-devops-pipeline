@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: assignment3-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: assignment3_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - assignment3-network
+
+  flask-api:
+    build:
+      context: ./flask-api
+    container_name: assignment3-flask-api
+    restart: always
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: assignment3_db
+    depends_on:
+      - mysql
+    networks:
+      - assignment3-network
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: assignment3-nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - flask-api
+    networks:
+      - assignment3-network
+
+volumes:
+  mysql_data:
+
+networks:
+  assignment3-network:
+    driver: bridge
