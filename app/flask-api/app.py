@@ -48,7 +48,7 @@ def init_db():
 
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "healthy", "service": "flask-api"}), 200
+    return jsonify({"status": "healthy", "service": "flask-api", "version": "v2"}), 200
 
 
 @app.route("/api/items", methods=["GET"])
