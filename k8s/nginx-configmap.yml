@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: assignment3
+data:
+  default.conf: |
+    server {
+        listen 80;
+
+        location / {
+            return 200 "Nginx reverse proxy is running on Kubernetes\n";
+            add_header Content-Type text/plain;
+        }
+
+        location /health {
+            proxy_pass http://flask-service:5000/health;
+        }
+
+        location /api/ {
+            proxy_pass http://flask-service:5000/api/;
+        }
+    }
